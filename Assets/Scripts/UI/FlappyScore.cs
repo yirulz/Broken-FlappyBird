@@ -9,37 +9,37 @@ namespace FlappyBird
     public class FlappyScore : MonoBehaviour
     {
         public Sprite[] numbers;            // Stores all the flappy digits
-        public GameObjectscoreTextPrefab;  // Score Prefab text element to create
+        public GameObject scoreTextPrefab;  // Score Prefab text element to create
         public Vector3 standbyPos = new Vector3(-15, 15); // Position offscreen for standby
         public int maxDigits = 5;           // The amount of digits to store offscreen for reuse
 
-        private GameObject  ] scoreTextPool;
+        private GameObject [] scoreTextPool;
         private int[] digits;
 
         // Use this for initialization
         void Start()
         {
             // Allocate memory for the score text pool
-            scoreTextPool = newGameObject[maxDigits];
+            scoreTextPool = new GameObject[maxDigits];
             // Loop through all available digits
             for (int i = 0; i < maxDigits; i++)
             {
                 // Create a new gameObject offscreen
                 GameObject clone =Instantiate(scoreTextPrefab, standbyPos, Quaternion.identity);
                 // Get the Image component attached to the clone
-                Image img = cloneGetComponent<Image>();
+                Image img = clone.GetComponent<Image>();
                 // Set sprite to corresponding number sprite
                 img.sprite = numbers[i];
                 // Attach to self
-                clone.tranorm.SetParent(transform);
+                clone.transform.SetParent(transform);
                 // Set name of text to index
-                clone.name i.ToString();
+                clone.name = i.ToString();
                 // Add it to pool
-                scoTextPool[i] = clone;
+                scoreTextPool[i] = clone;
             }
 
             // Subscribe to GameManager's added score event
-            GameManar.Instance.scoreAdded += UpdateScore;
+            GameManager.Instance.scoreAdded += UpdateScore;
 
             // Update score to start on zero
             UpdateScore(0);
@@ -48,7 +48,7 @@ namespace FlappyBird
         void UpdateScore(int score)
         {
             // Convert score into array of digits
-            int[] diits = GetDigits(score);
+            int[] digits = GetDigits(score);
             // Loop through all digits
             for (int i = 0; i < digits.Length; i++)
             {
@@ -65,17 +65,17 @@ namespace FlappyBird
             }
 
             // Loop through all remaining text elements in the pool
-            for (int i = digit.Length; i < scoreTextPool.Length; i++)
+            for (int i = digits.Length; i < scoreTextPool.Length; i++)
             {
                 // Deactivate that element
-                scoreextPool[i].SetActive(false);
+                scoreTextPool[i].SetActive(false);
             }
         }
 
         int[] GetDigits(int number)
         {
             List<int> digits = new List<int>();
-            while (nuber >= 10)
+            while (number >= 10)
             {
                 digits.Add(number % 10);
                 number /= 10;

@@ -6,28 +6,28 @@ namespace FlappyBird
 {
     public class ColumnSpawner : MonoBehaviour
     {
-        public GameObject comnPrefab;     // The column prefab we want to spawn
-        public int columnPlSize = 5;      // How many columns to keep on standby
+        public GameObject columnPrefab;     // The column prefab we want to spawn
+        public int columnPoolSize = 5;      // How many columns to keep on standby
         public float spawnRate = 3f;        // How quickly each columns spawn
-        public float columnMn = -1f;       // Minimum y value of the column position
+        public float columnMin = -1f;       // Minimum y value of the column position
         public float columnMax = 3.5f;      // Maximum y value of the column position
         public Vector3 standbyPos = new Vector3(-15, -25); // Holding position for the unused columns offscreen
         public float spawnXPos = 10f;
 
-        private GameObject[] lumns;       // Collection of pooled columns
-        private int currentlumn = 0;      // Index of the current column in the collection
-        private float spawTimer = 0f;
+        private GameObject[] columns;       // Collection of pooled columns
+        private int currentColumn = 0;      // Index of the current column in the collection
+        private float spawnTimer = 0f;
 
         // Use this for initialization
         void Start()
         {
             // Initialise column pool
-            columns = newGameObject[columnPoolSize];
+            columns = new GameObject[columnPoolSize];
             // Loop through the collection...
-            for (int i = 0; i < comnPoolSize; i++)
+            for (int i = 0; i < columnPoolSize; i++)
             {
                 // ... and create the individual columns
-                columns[i] = Instaiate(columnPrefab, standbyPos, Quaternion.identity);
+                columns[i] = Instantiate(columnPrefab, standbyPos, Quaternion.identity);
             }
         }
 
@@ -35,16 +35,16 @@ namespace FlappyBird
         void Update()
         {
             // Count up the timer
-            spawnTimer += TimedeltaTime;
+            spawnTimer += Time.deltaTime;
             // Is the game not over AND 
             // Has spawnTimer reached the spawnRate?
-            if(GameManager.Itance.gameOver == false && 
+            if(GameManager.Instance.gameOver == false && 
                spawnTimer >= spawnRate)
             {
                 // Reset timer 
                 spawnTimer = 0f;
                 // Spawn the column (i.e, Reuse a column)
-                Spawnolumn();
+                SpawnColumn();
             }
         }
 
@@ -55,11 +55,11 @@ namespace FlappyBird
             // Get current column
             GameObject column = columns[currentColumn];
             // Set position of current column
-            column.transrm.position = new Vector2(spawnXPos, spawnYPos);
+            column.transform.position = new Vector2(spawnXPos, spawnYPos);
             // Increase value of current column
             currentColumn++; // '++' increments value by 1
             // If the new currentColumn reaches the end of the array
-            if(currentComn >= columnPoolSize)
+            if(currentColumn >= columnPoolSize)
             {
                 // ... set it back to zero
                 currentColumn = 0;
